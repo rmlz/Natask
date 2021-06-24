@@ -8,23 +8,9 @@
 
 import React from 'react';
 import type {Node} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
+import {SafeAreaView, StyleSheet, useColorScheme, View} from 'react-native';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+import {Colors} from 'react-native/Libraries/NewAppScreen';
 
 const App: () => Node = () => {
   const isDarkMode = useColorScheme() === 'dark';
@@ -34,19 +20,18 @@ const App: () => Node = () => {
   };
 
   return (
-      <SafeAreaView testID='main' style={styles.container}>
-        <View testID='first' style={styles.first}>
-          <View style={styles.subView}></View>
-          <View style={styles.subView}></View>
-          <View style={styles.subView}></View>
-        </View>
-        <View testID='second' style={styles.second}>
-          <View style={styles.subView}></View>
-          <View style={styles.subView}></View>
-          <View style={styles.subView}></View>
-        </View>
-      </SafeAreaView>
-
+    <SafeAreaView testID="main" style={styles.container}>
+      <View testID="first" style={styles.first}>
+        <View style={styles.subView} />
+        <View style={styles.subView} />
+        <View style={styles.subView} />
+      </View>
+      <View testID="second" style={styles.second}>
+        <View style={styles.subView} />
+        <View style={styles.subView} />
+        <View style={styles.subView} />
+      </View>
+    </SafeAreaView>
   );
 };
 
@@ -80,12 +65,12 @@ const styles = StyleSheet.create({
   },
   bigBlue: {
     color: 'blue',
-    fontSize: 50
+    fontSize: 50,
   },
   smallRed: {
-    color:'red',
-    fontSize: 20
-  }
+    color: 'red',
+    fontSize: 20,
+  },
 });
 
 export default App;
