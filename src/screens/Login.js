@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import {signInWithEmailAndPassword} from '../services/FirebaseApi';
 import {
   KeyboardAvoidingView,
   View,
@@ -15,6 +16,7 @@ const img = require('../assets/TodoList.png');
 const Login = props => {
   const [email, setEmail] = useState(props.email);
   const [password, setPassword] = useState('');
+
   return (
     <KeyboardAvoidingView style={styles.container} behavior="padding">
       <View style={styles.topView}>
@@ -37,7 +39,16 @@ const Login = props => {
         />
         <Button
           title="Entrar"
-          onPress={() => Alert.alert(`Email: ${email}\nPassword: ${password}`)}
+          onPress={() => {
+            const success = signInWithEmailAndPassword(email, password).then(
+              result => {
+                const title = result.success ? 'Sucesso' : 'Não deu!';
+                Alert.alert(title, result.message, [
+                  {text: 'Ok', onPress: () => {}},
+                ]);
+              },
+            );
+          }}
         />
         <View style={styles.textConteiner}>
           <Text>Não faz parte da nossa turma? </Text>

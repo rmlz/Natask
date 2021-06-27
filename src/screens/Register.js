@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import {createUserWithEmailAndPassword} from '../services/FirebaseApi';
 import {
   SafeAreaView,
   KeyboardAvoidingView,
@@ -47,11 +48,30 @@ export default class Register extends Component {
             />
             <Button
               title={'Finalizar registro'}
-              onPress={() =>
-                Alert.alert(
-                  `Email: ${this.state.email}\nPassword: ${this.state.password}`,
-                )
-              }
+              onPress={() => {
+                const success = createUserWithEmailAndPassword(
+                  this.state.email,
+                  this.state.password,
+                );
+                if (success === true) {
+                  Alert.alert(
+                    'Sucesso',
+                    `Usuario criado com o e-mail ${this.state.email}`,
+                    [
+                      {
+                        text: 'Ok',
+                        onPress: () => this.props.navigation.goBack(),
+                      },
+                    ],
+                  );
+                } else {
+                  Alert.alert(
+                    'Não deu!',
+                    'Cara...não deu, depois vamos melhorar essa mensagem..mas não deu mesmo!\nTente utilizar outro e-mail cara...',
+                    [{text: 'Ok', onPress: () => null}],
+                  );
+                }
+              }}
             />
           </View>
         </KeyboardAvoidingView>

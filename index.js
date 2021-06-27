@@ -5,6 +5,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import Routes from './src/routes/Router';
 
 const wrappedRoutes = () => {
+
   return (
     <NavigationContainer>
       <SafeAreaView style={{flex: 1}}>
