@@ -1,39 +1,39 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
+import {CommonActions} from '@react-navigation/native';
+import React, {Component} from 'react';
+import {currentUser} from '../services/FirebaseApi';
+import {ActivityIndicator, StyleSheet, View} from 'react-native';
 
-import React from 'react';
-import type {Node} from 'react';
-import {SafeAreaView, StyleSheet, useColorScheme, View} from 'react-native';
-
-import {Colors} from 'react-native/Libraries/NewAppScreen';
-
-const App: () => Node = () => {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-
-  return (
-    <SafeAreaView testID="main" style={styles.container}>
-      <View testID="first" style={styles.first}>
-        <View style={styles.subView} />
-        <View style={styles.subView} />
-        <View style={styles.subView} />
+export default class App extends Component {
+  render() {
+    return (
+      <View style={styles.container}>
+        <ActivityIndicator style={styles.loading} />
       </View>
-      <View testID="second" style={styles.second}>
-        <View style={styles.subView} />
-        <View style={styles.subView} />
-        <View style={styles.subView} />
-      </View>
-    </SafeAreaView>
-  );
-};
+    );
+  }
+
+  async componentDidMount() {
+    let resetNavigation = CommonActions.reset({
+      index: 0,
+      routes: [{name: 'Login'}],
+    });
+
+    try {
+      const user = await currentUser();
+      if (user) {
+        this.props.navigation.dispatch(
+          CommonActions.reset({
+            index: 0,
+            routes: [{name: 'TaskList'}],
+          }),
+        );
+      }
+      this.props.navigation.dispatch(resetNavigation);
+    } catch (err) {
+      this.props.navigation.dispatch(resetNavigation);
+    }
+  }
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -72,5 +72,3 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
 });
-
-export default App;

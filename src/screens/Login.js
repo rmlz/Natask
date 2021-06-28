@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {signInWithEmailAndPassword} from '../services/FirebaseApi';
+import {CommonActions} from '@react-navigation/native';
 import {
   KeyboardAvoidingView,
   View,
@@ -43,9 +44,14 @@ const Login = props => {
             const success = signInWithEmailAndPassword(email, password).then(
               result => {
                 const title = result.success ? 'Sucesso' : 'Não deu!';
-                Alert.alert(title, result.message, [
-                  {text: 'Ok', onPress: () => {}},
-                ]);
+                if (result.success) {
+                  props.navigation.dispatch(
+                    CommonActions.reset({
+                      index: 0,
+                      routes: [{name: 'TaskList'}],
+                    }),
+                  );
+                }
               },
             );
           }}
