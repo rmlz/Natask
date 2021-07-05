@@ -39,6 +39,7 @@ const Login = props => {
           onChangeText={textPassword => setPassword(textPassword)}
         />
         <Button
+          color={'red'}
           title="Entrar"
           onPress={() => {
             const success = signInWithEmailAndPassword(email, password).then(
@@ -48,7 +49,7 @@ const Login = props => {
                   props.navigation.dispatch(
                     CommonActions.reset({
                       index: 0,
-                      routes: [{name: 'TaskList'}],
+                      routes: [{name: 'Lista de Tarefas'}],
                     }),
                   );
                 }
@@ -60,7 +61,7 @@ const Login = props => {
           <Text>Não faz parte da nossa turma? </Text>
           <Text
             style={styles.textRegister}
-            onPress={() => props.navigation.navigate('Register')}>
+            onPress={() => props.navigation.navigate('Registrar')}>
             Registre-se
           </Text>
         </View>

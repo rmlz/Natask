@@ -20,15 +20,18 @@ export default class App extends Component {
 
     try {
       const user = await currentUser();
-      if (user) {
+      console.log('TEM USUARIO LOGADO AÍ?', user);
+      if (user != null) {
+        console.log('Bora ir pra lista de tarefas direto');
         this.props.navigation.dispatch(
           CommonActions.reset({
             index: 0,
-            routes: [{name: 'TaskList'}],
+            routes: [{name: 'Lista de Tarefas'}],
           }),
         );
+      } else {
+        this.props.navigation.dispatch(resetNavigation);
       }
-      this.props.navigation.dispatch(resetNavigation);
     } catch (err) {
       this.props.navigation.dispatch(resetNavigation);
     }

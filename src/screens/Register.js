@@ -16,7 +16,7 @@ const img = require('../assets/TodoList.png');
 
 export default class Register extends Component {
   static navigationOptions = {
-    title: 'Register',
+    title: 'Cadastrar',
   };
 
   state = {
@@ -47,30 +47,16 @@ export default class Register extends Component {
               onChangeText={password => this.setState({password: password})}
             />
             <Button
+              color={'red'}
               title={'Finalizar registro'}
               onPress={() => {
                 const success = createUserWithEmailAndPassword(
                   this.state.email,
                   this.state.password,
-                );
-                if (success === true) {
-                  Alert.alert(
-                    'Sucesso',
-                    `Usuario criado com o e-mail ${this.state.email}`,
-                    [
-                      {
-                        text: 'Ok',
-                        onPress: () => this.props.navigation.goBack(),
-                      },
-                    ],
-                  );
-                } else {
-                  Alert.alert(
-                    'Não deu!',
-                    'Cara...não deu, depois vamos melhorar essa mensagem..mas não deu mesmo!\nTente utilizar outro e-mail cara...',
-                    [{text: 'Ok', onPress: () => null}],
-                  );
-                }
+                  this,
+                )
+                  .then(() => {})
+                  .catch(() => {});
               }}
             />
           </View>

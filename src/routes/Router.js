@@ -7,9 +7,13 @@ import {
   App,
   Task,
 } from '../screens/Screens';
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, Component} from 'react';
 import auth from '@react-native-firebase/auth';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
+import {Icon} from 'react-native-elements';
+import {signOut} from '../services/FirebaseApi';
+import {Button} from 'react-native';
+import {CommonActions} from '@react-navigation/native';
 
 const Stack = createNativeStackNavigator();
 const Tab = createMaterialTopTabNavigator();
@@ -17,52 +21,88 @@ const Tab = createMaterialTopTabNavigator();
 export const TaskTab = () => {
   return (
     <Tab.Navigator>
-      <Tab.Screen name="To Do" component={ToDoTasks} />
-      <Tab.Screen name="Done" component={DoneTasks} />
+      <Tab.Screen name="A fazer" component={ToDoTasks} />
+      <Tab.Screen name="Feitas" component={DoneTasks} />
     </Tab.Navigator>
   );
 };
 
-const Routes = () => {
+class Routes extends Component {
   // Set an initializing state whilst Firebase connects
-  const [initializing, setInitializing] = useState(true);
-  const [user, setUser] = useState();
+  state = {
+    initializing: true,
+    user: null,
+  };
+  subscriber;
+  self = this;
 
   // Handle user state changes
-  function onAuthStateChanged(user) {
-    setUser(user);
-    if (initializing) {
-      setInitializing(false);
+  onAuthStateChanged(user, src) {
+    src.setState({user: user});
+    console.log('LOGUEI O SEU USUARIO', user);
+  }
+
+  componentDidMount() {
+    this.subscriber = auth().onAuthStateChanged(user =>
+      this.onAuthStateChanged(user, this.self),
+    );
+    console.log('SUBSCRIBAAAAAAAAAAAAAA', this);
+    if (this.state.initializing) {
+      return null;
     }
   }
 
-  useEffect(() => {
-    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
-    return subscriber; // unsubscribe on unmount
-  }, []);
-
-  if (initializing) {
-    return null;
+  componentWillUnmount() {
+    try {
+      this.subscriber.unsubscribe();
+    } catch (e) {
+      console.log(e);
+    }
   }
 
-  return (
-    <Stack.Navigator headerMode={'screen'}>
-      <Stack.Screen
-        name={'App'}
-        component={App}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
-        name={'Login'}
-        component={Login}
-        options={{headerShown: false}}
-      />
+  render() {
+    if (this.state.user == null) {
+      return (
+        <Stack.Navigator headerMode={'screen'}>
+          <Stack.Screen
+            name={'App'}
+            component={App}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name={'Login'}
+            component={Login}
+            options={{headerShown: false}}
+          />
 
-      <Stack.Screen name={'Register'} component={Register} />
-      <Stack.Screen name={'TaskList'} component={TaskTab} />
-      <Stack.Screen name={'Task'} component={Task} />
-    </Stack.Navigator>
-  );
-};
+          <Stack.Screen name={'Registrar'} component={Register} />
+        </Stack.Navigator>
+      );
+    } else {
+      return (
+        <Stack.Navigator headerMode={'screen'}>
+          <Stack.Screen
+            name={'Lista de Tarefas'}
+            component={TaskTab}
+            options={{
+              headerRight: () => {
+                return (
+                  <Button
+                    color={'red'}
+                    title={'SAIR'}
+                    onPress={() => {
+                      signOut();
+                    }}
+                  />
+                );
+              },
+            }}
+          />
+          <Stack.Screen name={'Tarefa'} component={Task} />
+        </Stack.Navigator>
+      );
+    }
+  }
+}
 
 export default Routes;
